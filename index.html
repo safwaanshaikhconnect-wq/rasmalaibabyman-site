@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rasmalai Babyman</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Floating Hearts Background -->
+    <div class="floating-hearts">
+        <span>❤️</span> <span>💖</span> <span>💕</span> <span>💞</span>
+        <span>❤️</span> <span>💖</span> <span>💕</span> <span>💞</span>
+        <span>❤️</span> <span>💖</span> <span>💕</span> <span>💞</span>
+    </div>
+    <!-- Password Screen -->
+    <div id="lock-screen">
+        <div class="lock-card">
+            <h1>RasmalaiBabyman</h1>
+            <p>Enter our secret password</p>
+            <input type="password" id="password-input" placeholder="Password">
+            <button id="enter-btn">Enter</button>
+            <p id="error-msg"></p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="hidden">
+        <!-- Landing / Hero -->
+        <section class="hero">
+            <div class="hero-inner">
+                <h1>Babyman Loves Rasmalai</h1>
+                <p class="date">Since 06.10.25</p>
+                <p class="counter">We’ve been together for <span id="days-counter"></span> days</p>
+            </div>
+        </section>
+
+        <!-- Main Menu Links -->
+        <div class="menu-container">
+            <a href="about.html" class="menu-btn">About US</a>
+            <a href="photobooth.html" class="menu-btn">Our Photobooth</a>
+            <a href="letters.html" class="menu-btn">Letters For Her</a>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
