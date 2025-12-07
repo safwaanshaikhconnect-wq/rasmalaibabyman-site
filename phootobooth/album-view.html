@@ -15,8 +15,8 @@
         /* Specific styles for the inner photos */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
             padding: 20px;
             max-width: 1000px;
             margin: 0 auto;
@@ -24,27 +24,93 @@
 
         .gallery-item {
             background: white;
-            padding: 8px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
+            padding: 12px 12px 30px 12px;
+            /* Polaroid style bottom padding */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
+            transform-origin: center;
+        }
+
+        /* Alternating rotations for a "messy" cute look */
+        .gallery-item:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .gallery-item:nth-child(odd) {
+            transform: rotate(-2deg);
         }
 
         .gallery-item:hover {
-            transform: scale(1.05);
-            z-index: 5;
+            transform: scale(1.05) rotate(0deg) !important;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: #f0f0f0;
+            display: block;
         }
 
         .gallery-placeholder {
             width: 100%;
-            aspect-ratio: 1/1;
+            height: 200px;
             background: #eee;
-            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ccc;
+            color: #999;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90vh;
+            border: 8px solid white;
+            border-radius: 4px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 2001;
+            font-family: Arial, sans-serif;
         }
     </style>
 </head>
@@ -56,12 +122,18 @@
         <span>❤️</span> <span>💖</span> <span>💕</span> <span>💞</span>
     </div>
 
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img src="" alt="Zoomed Photo" class="lightbox-content" id="lightbox-img">
+    </div>
+
     <section class="section">
         <h2 id="album-title">Album Name</h2>
         <p style="text-align: center; margin-bottom: 20px;" id="album-date">Date goes here</p>
 
         <div class="gallery-grid" id="gallery-container">
-            <!-- JS will populate photods here -->
+            <!-- JS will populate photos here -->
         </div>
 
         <div class="menu-container">
@@ -70,33 +142,102 @@
     </section>
 
     <script>
-        // Simple script to fake dynamic album loading based on URL params
         const params = new URLSearchParams(window.location.search);
-        const date = params.get('date');
+        const albumId = params.get('id') || params.get('date'); // Support both new ID and legacy date
 
         const titleEl = document.getElementById('album-title');
         const dateEl = document.getElementById('album-date');
         const container = document.getElementById('gallery-container');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
 
-        // Example data map
+        // Data map
         const albums = {
-            '2025-10-06': { title: 'First Date', count: 5 },
-            '2025-11-20': { title: 'Ice Cream Date', count: 12 },
-            '2025-12-01': { title: 'Beach Day', count: 8 }
+            'first_photobooth': {
+                title: 'First Photobooth',
+                date: 'Sep 27, 2025',
+                images: [
+                    '../assets/photobooth/album1/photo1.jpg',
+                    '../assets/photobooth/album1/photo2.jpg',
+                    '../assets/photobooth/album1/photo3.jpg',
+                    '../assets/photobooth/album1/photo4.jpg',
+                    '../assets/photobooth/album1/photo5.jpg'
+                ]
+            },
+            'brooks_lake': {
+                title: 'Brooks & Kuruchi Lake',
+                date: 'Oct 2, 2025',
+                images: [
+                    '../assets/photobooth/album2/photo1.jpg',
+                    '../assets/photobooth/album2/photo2.jpg',
+                    '../assets/photobooth/album2/photo3.jpg',
+                    '../assets/photobooth/album2/photo4.jpg',
+                    '../assets/photobooth/album2/photo5.jpg',
+                    '../assets/photobooth/album2/photo6.jpg',
+                    '../assets/photobooth/album2/photo7.jpg'
+                ]
+            },
+            // Legacy fallbacks
+            '2025-10-06': { title: 'First Date', date: 'Oct 6, 2025', count: 5 },
+            '2025-11-20': { title: 'Ice Cream Date', date: 'Nov 20, 2025', count: 12 },
+            '2025-12-01': { title: 'Beach Day', date: 'Dec 1, 2025', count: 8 }
         };
 
-        const currentAlbum = albums[date] || { title: 'Unknown Album', count: 0 };
+        const currentAlbum = albums[albumId] || { title: 'Unknown Album', date: '', count: 0 };
 
         titleEl.textContent = currentAlbum.title;
-        dateEl.textContent = date || '???';
+        dateEl.textContent = currentAlbum.date;
 
-        // Generate placeholders
-        for (let i = 1; i <= currentAlbum.count; i++) {
-            const div = document.createElement('div');
-            div.className = 'gallery-item';
-            div.innerHTML = `<div class="gallery-placeholder">Photo ${i}</div>`;
-            container.appendChild(div);
+        // Render images
+        if (currentAlbum.images) {
+            // Render actual images
+            currentAlbum.images.forEach(src => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.onclick = () => openLightbox(src);
+
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = "Photobooth Capture";
+                img.loading = "lazy";
+
+                div.appendChild(img);
+                container.appendChild(div);
+            });
+        } else {
+            // Render placeholders for legacy/empty albums
+            const count = currentAlbum.count || 0;
+            for (let i = 1; i <= count; i++) {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `<div class="gallery-placeholder">Photo ${i}</div>`;
+                container.appendChild(div);
+            }
         }
+
+        // Lightbox Functions
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking outside image
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
     </script>
 </body>
 
