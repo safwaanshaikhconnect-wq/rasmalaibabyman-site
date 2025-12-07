@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album View - Rasmalai Babyman</title>
+    <link rel="stylesheet" href="photobooth.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Specific styles for the inner photos */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            background: white;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            z-index: 5;
+        }
+
+        .gallery-placeholder {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #eee;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating Hearts -->
+    <div class="floating-hearts">
+        <span>❤️</span> <span>💖</span> <span>💕</span> <span>💞</span>
+        <span>❤️</span> <span>💖</span> <span>💕</span> <span>💞</span>
+    </div>
+
+    <section class="section">
+        <h2 id="album-title">Album Name</h2>
+        <p style="text-align: center; margin-bottom: 20px;" id="album-date">Date goes here</p>
+
+        <div class="gallery-grid" id="gallery-container">
+            <!-- JS will populate photods here -->
+        </div>
+
+        <div class="menu-container">
+            <a href="photobooth.html" class="menu-btn">← Back to Albums</a>
+        </div>
+    </section>
+
+    <script>
+        // Simple script to fake dynamic album loading based on URL params
+        const params = new URLSearchParams(window.location.search);
+        const date = params.get('date');
+
+        const titleEl = document.getElementById('album-title');
+        const dateEl = document.getElementById('album-date');
+        const container = document.getElementById('gallery-container');
+
+        // Example data map
+        const albums = {
+            '2025-10-06': { title: 'First Date', count: 5 },
+            '2025-11-20': { title: 'Ice Cream Date', count: 12 },
+            '2025-12-01': { title: 'Beach Day', count: 8 }
+        };
+
+        const currentAlbum = albums[date] || { title: 'Unknown Album', count: 0 };
+
+        titleEl.textContent = currentAlbum.title;
+        dateEl.textContent = date || '???';
+
+        // Generate placeholders
+        for (let i = 1; i <= currentAlbum.count; i++) {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+            div.innerHTML = `<div class="gallery-placeholder">Photo ${i}</div>`;
+            container.appendChild(div);
+        }
+    </script>
+</body>
+
+</html>

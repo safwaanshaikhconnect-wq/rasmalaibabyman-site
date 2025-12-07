@@ -1,0 +1,274 @@
+/* photobooth.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #ffb6d9, #b3d8ff, #e3b3ff, #ffe4b3);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: #222;
+    overflow-x: hidden;
+    position: relative;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Dancing Script', cursive;
+}
+
+p,
+button,
+a,
+div {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Background Animation */
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Floating Hearts */
+.floating-hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.floating-hearts span {
+    position: absolute;
+    bottom: -50px;
+    font-size: 2rem;
+    animation: floatUp 10s linear infinite;
+    opacity: 0;
+}
+
+/* Randomize hearts logic */
+.floating-hearts span:nth-child(1) {
+    left: 10%;
+    animation-duration: 8s;
+}
+
+.floating-hearts span:nth-child(2) {
+    left: 20%;
+    animation-duration: 12s;
+    animation-delay: 2s;
+    font-size: 1.5rem;
+}
+
+.floating-hearts span:nth-child(3) {
+    left: 35%;
+    animation-duration: 10s;
+    animation-delay: 4s;
+}
+
+.floating-hearts span:nth-child(4) {
+    left: 50%;
+    animation-duration: 14s;
+    animation-delay: 1s;
+    font-size: 2.5rem;
+}
+
+.floating-hearts span:nth-child(5) {
+    left: 65%;
+    animation-duration: 9s;
+    animation-delay: 3s;
+}
+
+.floating-hearts span:nth-child(6) {
+    left: 80%;
+    animation-duration: 11s;
+    animation-delay: 5s;
+}
+
+.floating-hearts span:nth-child(7) {
+    left: 90%;
+    animation-duration: 13s;
+    animation-delay: 0.5s;
+    font-size: 1.8rem;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    90% {
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Page Specific Styles */
+.section {
+    padding: 60px 16px;
+    min-height: 100vh;
+}
+
+.section h2 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #d14d7e;
+    text-align: center;
+}
+
+/* Album Grid System */
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.album-card {
+    background: transparent;
+    cursor: pointer;
+    perspective: 1000px;
+    /* For 3D effect */
+    text-decoration: none;
+    /* Removes link underline */
+    color: inherit;
+    display: block;
+    text-align: center;
+    /* Centers the details text */
+}
+
+.album-content {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    z-index: 2;
+}
+
+/* Stack effect */
+.album-content::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: -4px;
+    bottom: -4px;
+    background: #f8f8f8;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: -1;
+    transition: transform 0.3s ease;
+}
+
+.album-content::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: -8px;
+    bottom: -8px;
+    background: #f0f0f0;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: -2;
+    transition: transform 0.3s ease;
+}
+
+.album-card:hover .album-content {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.album-card:hover .album-content::before {
+    transform: translate(3px, 3px);
+}
+
+.album-card:hover .album-content::after {
+    transform: translate(6px, 6px);
+}
+
+.album-cover {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #fecfef, #ff9a9e);
+    /* Album Cover Gradient */
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    overflow: hidden;
+}
+
+.album-details h3 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+.album-details p {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Menu Button */
+.menu-container {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 40px;
+}
+
+.menu-btn {
+    text-decoration: none;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    /* Purple/Pink gradient for Photobooth */
+}
+
+.menu-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #ffb6d9;
+    color: #d14d7e;
+}
