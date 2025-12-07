@@ -272,3 +272,18 @@ div {
     border-color: #ffb6d9;
     color: #d14d7e;
 }
+/* Special Glow Effect for the Romantic Album */
+.special-album:hover .album-content {
+    box-shadow: 0 0 30px rgba(255, 4, 117, 0.6), 0 0 60px rgba(255, 4, 117, 0.3) !important;
+    border-color: #ff0475;
+    transform: translateY(-8px) scale(1.02);
+}
+
+.special-album:hover .album-cover {
+    animation: pulseGlow 1.5s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    from { box-shadow: 0 0 10px rgba(255, 4, 117, 0.5); }
+    to { box-shadow: 0 0 25px rgba(255, 4, 117, 0.9); }
+}
